@@ -1,0 +1,14 @@
+here are my notes about modules im worknig on:
+i will just describe the architecture of them, not specific methods etc
+
+dotenv:
+basically loads .env file variables to PATH
+there is a load function and that's it, that takes and loads variables
+
+os lib provides functions for getting env variables after that
+
+argparser:
+it has constructure, and we initialize it 
+
+genai:
+

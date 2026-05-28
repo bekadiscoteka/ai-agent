@@ -10,13 +10,21 @@ def main():
 		raise RuntimeError("environtmental variable not found")
 	
 	parser = argparse.ArgumentParser(description = "Chatbot")
-	parser.add_argument("user_prompt", type=str, help="user prompt")
+	parser.add_argument("user_prompt", type=str, help="Write your prompt")	
+	parser.add_argument("--verbose", action="store_true", help="print detailed report about tokens used")
+	parser.add_argument("--short", action="store_true", help="get short answer")
 	args = parser.parse_args()
 	prompt = args.user_prompt
 
+	if args.short:
+		propmt = "answer shortly: " + prompt
+
 	client = genai.Client(api_key=api_key)
-	model = "gemini-2.5-flash"
-	req_obj = client.models.generate_content(model=model, contents=prompt)
+	messages: list[genai.types.Content] = [
+		genai.types.Content(role="user", parts=[genai.types.Part(text=prompt)])
+	]
+
+	req_obj = client.models.generate_content(model="gemini-2.5-flash", contents=messages)
 	if req_obj == None:
 		raise RuntimeError("out of tokens maybe!?")
 
@@ -29,8 +37,11 @@ def main():
 		"Response:\n": req_obj.text
 	}
 
-	for key, value in response.items():
-		print(key + str(value))
+	if args.verbose:
+		for key, value in response.items():
+			print(key + str(value))
+	else:
+		print("Response:\n" + req_obj.text)
 	
 	
 
