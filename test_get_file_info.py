@@ -14,13 +14,13 @@ def tests():
 
 	for args, value in test_cases.items():
 		resp: str = get_file_info(args[0], args[1])
-		resp.split(':', maxsplit=1)
+		splitted = resp.split(':', maxsplit=1)
 
 
-		if (resp[0] == "Success") == value:
+		if (splitted[0] == "Success") == value:
 			passed += 1
 		else:
-			print(f'failed at {args}: \nexpected: {"Success..." if value else "Error..."}, actual: {resp}')
+			print(f'Test failed at inputs: {args}\nexpected: {"Success..." if value else "Error..."}, actual: {splitted[0]}')
 			failed += 1
 
 	print(f"passed: {passed}, failed: {failed}") 
