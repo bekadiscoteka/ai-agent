@@ -4,14 +4,25 @@ def get_file_info(working_dir, directory: str = '.'):
 	try: 
 		working_dir_abs = os.path.abspath(working_dir)
 		target = os.path.normpath( os.path.join(working_dir_abs, directory) )
-		print(f"DEBUG INFO: working dir = {working_dir}, target = {target}")
 		valid = os.path.commonpath( [working_dir_abs, target] ) == working_dir_abs
 
 		if not valid:
 			return f'Error: Cannot list "{directory}" as it is outside the permitted working directory'
 		if not os.path.isdir(target):
 			return f'Error: "{directory}" is not a directory'
+
+		# prepare the dictionary
+
+		dirlist = os.listdir(target)
+		contents_list: list[str] = []
+
+		for name in dirlist:
+			path = os.path.join(target, name)
+			size = os.path.getsize(path)
+			is_dir = os.path.isdir(path)
+
+			contents_list.append(f"- {name}: file_size={size} bytes, is_dir={is_dir}")
 		
-		return f'Success: "{directory}" is within the working directory'	
+		return '\n'.join(contents_list) 
 	except Exception as e:
 		return f"Error: {e}"

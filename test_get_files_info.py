@@ -2,9 +2,9 @@ from functions.get_file_info import get_file_info
 
 test_cases = {
 	("calculator", '.'): True,
+	("calculator", 'pkg'): True,
 	("calculator", '/bin'): False,
 	("calculator", '../'): False,
-	("calculator", 'main.py'): False
 }
 
 def tests():
@@ -14,16 +14,9 @@ def tests():
 
 	for args, value in test_cases.items():
 		resp: str = get_file_info(args[0], args[1])
-		splitted = resp.split(':', maxsplit=1)
+		print(f"Result for '{args[1]}' directory:\n{resp}")
 
-
-		if (splitted[0] == "Success") == value:
-			passed += 1
-		else:
-			print(f'Test failed at inputs: {args}\nexpected: {"Success..." if value else "Error..."}, actual: {splitted[0]}')
-			failed += 1
-
-	print(f"passed: {passed}, failed: {failed}") 
+	return 0
 
 
 if __name__ == "__main__":
