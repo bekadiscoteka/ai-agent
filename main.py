@@ -1,7 +1,9 @@
+#!usr/bin/python3
 import os
 import argparse
 from dotenv import load_dotenv
 from google import genai
+from prompts import system_prompt, available_functions
 
 def main():
 	load_dotenv()
@@ -24,7 +26,9 @@ def main():
 		genai.types.Content(role="user", parts=[genai.types.Part(text=prompt)])
 	]
 
-	req_obj = client.models.generate_content(model="gemini-2.5-flash", contents=messages)
+	SYS_INSTRUCTION = genai.types.GenerateContentConfig(system_instruction=system_prompt, temperature=0, tools=[available_functions])
+
+	req_obj = client.models.generate_content(model="gemini-2.5-flash", contents=messages, config=SYS_INSTRUCTION)
 	if req_obj == None:
 		raise RuntimeError("out of tokens maybe!?")
 
@@ -40,8 +44,21 @@ def main():
 	if args.verbose:
 		for key, value in response.items():
 			print(key + str(value))
+
 	else:
-		print("Response:\n" + req_obj.text)
+		function_calls = req_obj.function_calls
+		if function_calls == None:
+			print("function calls returned is None type")
+		else:
+
+			for function_call in function_calls:
+				print(f"Calling function: {function_call.name}({function_call.args})")
+
+
+	#if req_obj.text != None:	
+	#	print("Response:\n" + req_obj.text)
+	#else:
+	#	print("there is no response text")
 	
 	
 

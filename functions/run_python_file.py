@@ -1,5 +1,26 @@
 import subprocess
 from os import path as p
+from google.genai import types
+
+schema_run_python_file = types.FunctionDeclaration(
+    name="run_python_file",
+    description="Run python file, in specified path, with specified arguments",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="path to the file, relative to working directory",
+            ),
+			"args": types.Schema(
+				type=types.Type.ARRAY,
+				items=types.Schema(type=types.Type.STRING),
+				description="Given system arguments to the program",
+			),
+        },
+    ),
+)
+
 def run_python_file(
     working_directory: str, file_path: str, args: list[str] | None = None
 ) -> str:
