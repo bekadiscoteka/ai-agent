@@ -2,7 +2,7 @@ import os
 from google.genai import types
 
 schema_get_files_info = types.FunctionDeclaration(
-    name="get_file_info",
+    name="get_files_info",
     description="Lists files in a specified directory relative to the working directory, providing file size and directory status",
     parameters=types.Schema(
         type=types.Type.OBJECT,
@@ -17,7 +17,7 @@ schema_get_files_info = types.FunctionDeclaration(
 
 
 
-def get_file_info(working_dir, directory: str = '.'):
+def get_files_info(working_dir, directory: str = '.'):
 	try: 
 		working_dir_abs = os.path.abspath(working_dir)
 		target = os.path.normpath( os.path.join(working_dir_abs, directory) )

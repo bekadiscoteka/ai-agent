@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from google import genai
 from prompts import system_prompt, available_functions
 from collections.abc import Callable
-from functions.get_file_info import get_file_info
+from functions.get_files_info import get_files_info
 from functions.get_file_content import get_file_content
 from functions.write_file import write_file
 from functions.run_python_file import run_python_file
@@ -14,12 +14,15 @@ from functions.run_python_file import run_python_file
 from google.genai import types
 
 
+SYS_INSTRUCTION = genai.types.GenerateContentConfig(system_instruction=system_prompt, temperature=0, tools=[available_functions])
+MODEL_NAME = "gemini-2.5-flash"
+
 def call_function(
     function_call: types.FunctionCall, verbose: bool = False
 ) -> types.Content:
 	
 	function_map: dict[str, Callable[..., str]] = {
-		"get_file_info": get_file_info,
+		"get_files_info": get_files_info,
 		"get_file_content": get_file_content,
 		"write_file": write_file,
 		"run_python_file": run_python_file,
@@ -84,10 +87,9 @@ def main():
 		genai.types.Content(role="user", parts=[genai.types.Part(text=prompt)])
 	]
 
-	SYS_INSTRUCTION = genai.types.GenerateContentConfig(system_instruction=system_prompt, temperature=0, tools=[available_functions])
 
 	for _ in range(20):
-		req_obj = client.models.generate_content(model="gemini-3.1-flash-lite", contents=messages, config=SYS_INSTRUCTION)
+		req_obj = client.models.generate_content(model=MODEL_NAME, contents=messages, config=SYS_INSTRUCTION)
 
 		if req_obj == None:
 			raise RuntimeError("out of tokens maybe!?")
@@ -109,7 +111,7 @@ def main():
 				print(key + str(value))
 
 		if req_obj.function_calls == None:
-			print(f"finished: {req_obj.function_calls}")
+			print(f"finished: {req_obj.text}")
 			return 0
 
 		function_calls = req_obj.function_calls
