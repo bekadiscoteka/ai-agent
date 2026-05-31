@@ -25,6 +25,8 @@ def call_function(
 		"run_python_file": run_python_file,
 	}
 
+	call_id = getattr(function_call, "id", None)
+
 	function_name = function_call.name or ""
 	function_args = function_call.args.copy() or {}
 	if verbose:
@@ -91,7 +93,7 @@ def main():
 			raise RuntimeError("out of tokens maybe!?")
 
 		message_content = req_obj.candidates[0].content
-		messages.append(genai.types.Content( role=message_content.role, parts=message_content.parts ))
+		messages.append(req_obj.candidates[0].content)
 
 		usage_metadata = req_obj.usage_metadata
 		
