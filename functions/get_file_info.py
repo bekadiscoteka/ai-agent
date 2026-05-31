@@ -2,7 +2,7 @@ import os
 from google.genai import types
 
 schema_get_files_info = types.FunctionDeclaration(
-    name="get_files_info",
+    name="get_file_info",
     description="Lists files in a specified directory relative to the working directory, providing file size and directory status",
     parameters=types.Schema(
         type=types.Type.OBJECT,

@@ -15,17 +15,17 @@ schema_run_python_file = types.FunctionDeclaration(
 			"args": types.Schema(
 				type=types.Type.ARRAY,
 				items=types.Schema(type=types.Type.STRING),
-				description="Given system arguments to the program",
+				description="Given arguments to the program",
 			),
         },
     ),
 )
 
 def run_python_file(
-    working_directory: str, file_path: str, args: list[str] | None = None
+    working_dir: str, file_path: str, args: list[str] | None = None
 ) -> str:
 	try:
-		abs_workdir = p.normpath( p.abspath(working_directory) )
+		abs_workdir = p.normpath( p.abspath(working_dir) )
 		abs_filepath = p.normpath( p.join(abs_workdir, file_path) )
 
 		if p.commonpath( [abs_workdir, abs_filepath] ) != abs_workdir:
